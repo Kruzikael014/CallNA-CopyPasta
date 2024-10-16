@@ -1,12 +1,27 @@
 function copyMessage(message) {
-    navigator.clipboard.writeText(message)
-        .then(() => {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(message)
+            .then(() => {
+                alert('Message copied to clipboard!');
+            })
+            .catch(err => {
+                alert('Failed to copy:', err);
+            });
+    } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = message;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
             alert('Message copied to clipboard!');
-        })
-        .catch(err => {
-            console.error('Failed to copy:', err);
-        });
+        } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+        }
+        document.body.removeChild(textArea);
+    }
 }
+
 
 async function fetchMessage() {
     try {
@@ -72,14 +87,15 @@ window.onload = async function () {
 
     if (messages) {
         const messageContainer = document.getElementById('message-container');
-        // messageContainer.innerHTML = '';  // Clear existing messages (if needed)
 
         messages.forEach(message => {
+            // Using backticks for multi-line support in `copyMessage` function
+            const safeMessageContent = message.content.replace(/'/g, "\\'").replace(/\n/g, "\\n");
             const messageBoxHTML = `
-            <div class="message-box" id="message-${message.message_id}">
-                <button class="copy-btn" onclick="copyMessage('${message.content}')">📋</button>
+            <div class="message-box" id="message-${message.message_id}" onclick="copyMessage(\`${safeMessageContent}\`)">
+                <button class="copy-btn" onclick="copyMessage(\`${safeMessageContent}\`)">📋</button>
                 <button class="delete-btn" onclick="deleteMessage('${message.message_id}')">🗑️</button>
-                <p>${message.content}</p>
+                <p>${message.content.replace(/\n/g, '<br>')}</p>
             </div>`;
             messageContainer.innerHTML += messageBoxHTML;
         });
