@@ -25,7 +25,7 @@ function copyMessage(message) {
 
 async function fetchMessage() {
     try {
-        const response = await fetch('http://103.175.217.115:6969/messages');
+        const response = await fetch('https://kruzikael.my.id/callna-copypasta/api/messages');
         const result = await response.json();
         if (result.isSuccess) {
             return result.obj;
@@ -39,7 +39,7 @@ async function fetchMessage() {
 
 async function deleteMessage(messageId) {
     try {
-        const response = await fetch(`http://103.175.217.115:6969/messages/${messageId}`, {
+        const response = await fetch(`https://kruzikael.my.id/callna-copypasta/api/messages/${messageId}`, {
             method: 'DELETE'
         });
         const result = await response.json()
@@ -60,7 +60,7 @@ async function addMessage() {
     const messageContent = prompt('Enter the message content:');
     if (messageContent) {
         try {
-            const response = await fetch('http://103.175.217.115:6969/messages', {
+            const response = await fetch('https://kruzikael.my.id/callna-copypasta/api/messages', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
