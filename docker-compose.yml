@@ -1,10 +1,9 @@
-version: '3.8'
 
 services: 
   backend:
     build:
       context: './server'
-      dockerFile: Dockerfile
     ports:
       - '6969:6969'
-    
+    env_file:
+      - server/.env
